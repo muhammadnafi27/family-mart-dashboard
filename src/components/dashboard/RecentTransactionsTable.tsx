@@ -1,5 +1,6 @@
 'use client'
 
+import { ShoppingCart } from 'lucide-react'
 import { useRecentTransactions } from '@/hooks/useOverview'
 import { formatCurrency } from '@/lib/utils'
 import { formatDateTime } from '@/lib/format'
@@ -86,7 +87,7 @@ export function RecentTransactionsTable() {
                     <tr>
                       <td colSpan={6} className="px-4 py-12 text-center">
                         <div className="flex flex-col items-center gap-2 text-[#64748B]">
-                          <span className="text-2xl">🛒</span>
+                          <ShoppingCart className="h-8 w-8 text-[#CBD5E1]" />
                           <p className="text-sm font-medium">Tidak ada transaksi</p>
                           <p className="text-xs">Coba ubah rentang tanggal filter</p>
                         </div>

@@ -1,5 +1,6 @@
 'use client'
 
+import { CheckCircle2 } from 'lucide-react'
 import { useLowStock } from '@/hooks/useOverview'
 
 type LowStockItem = {
@@ -82,7 +83,7 @@ export function LowStockTable() {
         ) : items.length === 0 ? (
           <div className="py-12 flex flex-col items-center gap-2 text-[#64748B]">
             <div className="h-12 w-12 rounded-full bg-green-50 flex items-center justify-center">
-              <span className="text-2xl">✓</span>
+              <CheckCircle2 className="h-7 w-7 text-[#22C55E]" />
             </div>
             <p className="text-sm font-semibold text-[#22C55E]">Semua stok aman</p>
             <p className="text-xs">Tidak ada produk di bawah batas reorder</p>

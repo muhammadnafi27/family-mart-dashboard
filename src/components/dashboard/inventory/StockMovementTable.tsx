@@ -1,6 +1,6 @@
 'use client'
 
-import { ArrowUp, ArrowDown } from 'lucide-react'
+import { ArrowUp, ArrowDown, ClipboardList } from 'lucide-react'
 import { useStockMovement } from '@/hooks/useInventory'
 import { useInventoryFilterStore } from '@/store/inventoryFilterStore'
 import { formatNumber } from '@/lib/utils'
@@ -60,7 +60,7 @@ export function StockMovementTable() {
                     <tr>
                       <td colSpan={7} className="py-12 text-center">
                         <div className="flex flex-col items-center gap-2 text-[#64748B]">
-                          <span className="text-2xl">📋</span>
+                          <ClipboardList className="h-8 w-8 text-[#CBD5E1]" />
                           <p className="text-sm font-medium">Tidak ada penyesuaian stok</p>
                         </div>
                       </td>

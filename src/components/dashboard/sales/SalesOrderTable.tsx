@@ -5,7 +5,7 @@ import {
   useReactTable, getCoreRowModel, getSortedRowModel, flexRender,
   createColumnHelper, type SortingState,
 } from '@tanstack/react-table'
-import { Search, ChevronsUpDown, ChevronUp, ChevronDown, ChevronLeft, ChevronRight } from 'lucide-react'
+import { Search, ChevronsUpDown, ChevronUp, ChevronDown, ChevronLeft, ChevronRight, ShoppingCart } from 'lucide-react'
 import { useSalesOrders } from '@/hooks/useSales'
 import { useSalesFilterStore } from '@/store/salesFilterStore'
 import { formatCurrency } from '@/lib/utils'
@@ -221,7 +221,7 @@ export function SalesOrderTable() {
                     <tr>
                       <td colSpan={columns.length} className="px-4 py-12 text-center">
                         <div className="flex flex-col items-center gap-2 text-[#64748B]">
-                          <span className="text-2xl">🛒</span>
+                          <ShoppingCart className="h-8 w-8 text-[#CBD5E1]" />
                           <p className="text-sm font-medium">Tidak ada transaksi ditemukan</p>
                           <p className="text-xs">Coba ubah filter atau kata kunci pencarian</p>
                         </div>

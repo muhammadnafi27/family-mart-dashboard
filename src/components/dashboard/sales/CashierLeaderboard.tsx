@@ -1,11 +1,12 @@
 'use client'
 
+import { Trophy, Medal, Award } from 'lucide-react'
 import { useCashierStats } from '@/hooks/useSales'
 import { formatCurrency, formatNumber } from '@/lib/utils'
 import type { CashierStat } from '@/types/sales'
 
 const RANK_COLORS = ['#F59E0B', '#94A3B8', '#CD7F32', '#64748B', '#64748B']
-const RANK_LABELS = ['🥇', '🥈', '🥉', '4', '5', '6', '7', '8', '9', '10']
+const RANK_ICONS = [Trophy, Medal, Award] as const
 
 function RowSkeleton() {
   return (
@@ -51,6 +52,7 @@ export function CashierLeaderboard() {
                 const barPct = (c.revenue / maxRevenue) * 100
                 const rankColor = RANK_COLORS[i] ?? '#64748B'
                 const isTop3 = i < 3
+                const RankIcon = isTop3 ? RANK_ICONS[i] : null
 
                 return (
                   <div key={c.cashier_id} className="py-3 border-b border-[#F1F5F9] last:border-0">
@@ -62,7 +64,7 @@ export function CashierLeaderboard() {
                         }`}
                         style={isTop3 ? { background: rankColor } : undefined}
                       >
-                        {isTop3 ? RANK_LABELS[i] : String(i + 1)}
+                        {RankIcon ? <RankIcon className="h-4 w-4" /> : String(i + 1)}
                       </div>
 
                       {/* Name + store */}

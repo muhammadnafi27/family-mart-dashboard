@@ -1,7 +1,7 @@
 'use client'
 
 import * as React from 'react'
-import { AlertTriangle, Search } from 'lucide-react'
+import { AlertTriangle, Search, CheckCircle2 } from 'lucide-react'
 import { useLowStockTable } from '@/hooks/useInventory'
 import { formatCurrency, formatNumber } from '@/lib/utils'
 import type { LowStockRow } from '@/types/inventory'
@@ -113,7 +113,7 @@ export function LowStockTable() {
                     <tr>
                       <td colSpan={10} className="py-12 text-center">
                         <div className="flex flex-col items-center gap-2 text-[#64748B]">
-                          <span className="text-2xl">✓</span>
+                          <CheckCircle2 className="h-8 w-8 text-[#22C55E]" />
                           <p className="text-sm font-medium text-[#22C55E]">Semua stok dalam kondisi baik!</p>
                         </div>
                       </td>

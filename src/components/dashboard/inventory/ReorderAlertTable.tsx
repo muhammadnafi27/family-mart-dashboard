@@ -1,6 +1,6 @@
 'use client'
 
-import { RefreshCw } from 'lucide-react'
+import { RefreshCw, CheckCircle2 } from 'lucide-react'
 import { useReorderAlerts } from '@/hooks/useInventory'
 import { formatNumber } from '@/lib/utils'
 import type { ReorderAlertRow } from '@/types/inventory'
@@ -57,7 +57,7 @@ export function ReorderAlertTable() {
                     <tr>
                       <td colSpan={7} className="py-12 text-center">
                         <div className="flex flex-col items-center gap-2 text-[#64748B]">
-                          <span className="text-2xl">✓</span>
+                          <CheckCircle2 className="h-8 w-8 text-[#22C55E]" />
                           <p className="text-sm font-medium text-[#22C55E]">Tidak ada produk yang perlu reorder</p>
                         </div>
                       </td>

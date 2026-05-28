@@ -117,9 +117,9 @@ export function SalesFilterBar() {
     (m: { method_id: number; method_name: string }) => ({ value: String(m.method_id), label: m.method_name })
   )
   const statusOpts: SelectOption[] = [
-    { value: 'completed', label: '✓ Selesai' },
-    { value: 'pending', label: '○ Pending' },
-    { value: 'cancelled', label: '✕ Dibatalkan' },
+    { value: 'completed', label: 'Selesai' },
+    { value: 'pending', label: 'Pending' },
+    { value: 'cancelled', label: 'Dibatalkan' },
   ]
 
   return (

@@ -1,7 +1,7 @@
 'use client'
 
 import * as React from 'react'
-import { Search, ChevronLeft, ChevronRight, ChevronsUpDown, ChevronUp, ChevronDown } from 'lucide-react'
+import { Search, ChevronLeft, ChevronRight, ChevronsUpDown, ChevronUp, ChevronDown, Users } from 'lucide-react'
 import { useTopCustomers } from '@/hooks/useCustomers'
 import { useCustomerFilterStore } from '@/store/customerFilterStore'
 import { formatCurrency, formatNumber } from '@/lib/utils'
@@ -109,7 +109,7 @@ export function TopCustomerTable() {
               : isError
                 ? <tr><td colSpan={9} className="py-12 text-center text-sm text-[#64748B]">Gagal memuat data</td></tr>
                 : rows.length === 0
-                  ? <tr><td colSpan={9} className="py-12 text-center"><div className="flex flex-col items-center gap-2 text-[#64748B]"><span className="text-2xl">👥</span><p className="text-sm font-medium">Tidak ada pelanggan ditemukan</p></div></td></tr>
+                  ? <tr><td colSpan={9} className="py-12 text-center"><div className="flex flex-col items-center gap-2 text-[#64748B]"><Users className="h-8 w-8 text-[#CBD5E1]" /><p className="text-sm font-medium">Tidak ada pelanggan ditemukan</p></div></td></tr>
                   : rows.map((c, i) => {
                     const tier = TIER_STYLE[c.tier_name] ?? TIER_STYLE['Non-Member']
                     return (

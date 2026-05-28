@@ -5,7 +5,7 @@ import {
   useReactTable, getCoreRowModel, getSortedRowModel,
   flexRender, createColumnHelper, type SortingState,
 } from '@tanstack/react-table'
-import { Search, ChevronLeft, ChevronRight, ChevronsUpDown, ChevronUp, ChevronDown } from 'lucide-react'
+import { Search, ChevronLeft, ChevronRight, ChevronsUpDown, ChevronUp, ChevronDown, Package } from 'lucide-react'
 import { useProductTable } from '@/hooks/useProducts'
 import { useProductFilterStore } from '@/store/productFilterStore'
 import { formatCurrency, formatNumber, formatPercent } from '@/lib/utils'
@@ -192,7 +192,7 @@ export function ProductMarginTable() {
                     <tr>
                       <td colSpan={columns.length} className="py-12 text-center">
                         <div className="flex flex-col items-center gap-2 text-[#64748B]">
-                          <span className="text-2xl">📦</span>
+                          <Package className="h-8 w-8 text-[#CBD5E1]" />
                           <p className="text-sm font-medium">Tidak ada produk ditemukan</p>
                         </div>
                       </td>
