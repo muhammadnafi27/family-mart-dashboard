@@ -42,7 +42,7 @@ export async function getReturnReasonStats(filters: { from?: Date; to?: Date } =
       SUM(r.refund_amount) AS total_refund
     FROM returns r
     JOIN return_reasons rr ON rr.reason_id = r.reason_id
-    WHERE r.status = 'approved'
+    WHERE r.status IN ('Approved','Refunded')
       ${from ? `AND r.return_date >= '${from.toISOString().slice(0, 10)}'` : ''}
       ${to ? `AND r.return_date <= '${to.toISOString().slice(0, 10)} 23:59:59'` : ''}
     GROUP BY rr.reason_name

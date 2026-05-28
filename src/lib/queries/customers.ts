@@ -34,7 +34,7 @@ export async function getCustomerKPIs(f: CustomerFilters = {}): Promise<Customer
       LEFT JOIN (
         SELECT customer_id, SUM(grand_total) AS total_spent
         FROM sales_orders
-        WHERE status = 'completed' ${dateClause}
+        WHERE status = 'Paid' ${dateClause}
         GROUP BY customer_id
       ) cust_spend ON cust_spend.customer_id = c.customer_id`),
 
@@ -46,7 +46,7 @@ export async function getCustomerKPIs(f: CustomerFilters = {}): Promise<Customer
       SELECT c.full_name, SUM(so.grand_total) AS total_spent, COUNT(so.sale_id) AS order_count
       FROM customers c
       JOIN sales_orders so ON so.customer_id = c.customer_id
-      WHERE so.status = 'completed' ${dateClause}
+      WHERE so.status = 'Paid' ${dateClause}
       GROUP BY c.customer_id, c.full_name
       ORDER BY total_spent DESC LIMIT 1`),
   ])
@@ -99,7 +99,7 @@ export async function getMembershipTierStats(f: CustomerFilters = {}): Promise<M
     LEFT JOIN memberships m ON m.customer_id = c.customer_id
     LEFT JOIN membership_tiers mt ON mt.tier_id = m.tier_id
     LEFT JOIN sales_orders so ON so.customer_id = c.customer_id
-      AND so.status = 'completed' ${dateClause ? dateClause.replace('AND so.', 'AND ') : ''}
+      AND so.status = 'Paid' ${dateClause ? dateClause.replace('AND so.', 'AND ') : ''}
     GROUP BY mt.tier_id, mt.tier_name
     ORDER BY FIELD(mt.tier_name,'Platinum','Gold','Silver','Bronze') ASC, count DESC`)
 
@@ -126,7 +126,7 @@ export async function getMemberVsNonMember(f: CustomerFilters = {}): Promise<Mem
       COUNT(so.sale_id)                                    AS order_count
     FROM sales_orders so
     LEFT JOIN memberships m ON m.customer_id = so.customer_id
-    WHERE so.status = 'completed' ${dateClause}
+    WHERE so.status = 'Paid' ${dateClause}
     GROUP BY segment`)
 
   return rows.map((r) => ({
@@ -154,7 +154,7 @@ export async function getCustomersByCity(f: CustomerFilters = {}): Promise<Custo
     JOIN cities ci ON ci.city_id = d.city_id
     LEFT JOIN (
       SELECT customer_id, SUM(grand_total) AS total
-      FROM sales_orders WHERE status='completed' ${dateClause}
+      FROM sales_orders WHERE status='Paid' ${dateClause}
       GROUP BY customer_id
     ) spend ON spend.customer_id = c.customer_id
     GROUP BY ci.city_id, ci.city_name
@@ -196,7 +196,7 @@ export async function getTopCustomers(f: CustomerFilters = {}): Promise<{
         AVG(grand_total) AS avg_order,
         MAX(sale_datetime) AS last_purchase
       FROM sales_orders
-      WHERE status='completed' ${dateClause}
+      WHERE status='Paid' ${dateClause}
       GROUP BY customer_id
     ) s ON s.customer_id = c.customer_id
     WHERE s.customer_id IS NOT NULL ${searchClause} ${tierClause}`

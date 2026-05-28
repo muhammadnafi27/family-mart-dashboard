@@ -36,7 +36,7 @@ export async function getPromotionKPIs(f: PromotionFilters = {}): Promise<Promot
       FROM sales_order_items soi
       JOIN sales_orders so ON so.sale_id = soi.sale_id
       JOIN promotions pr ON pr.promotion_id = soi.promo_id
-      WHERE so.status = 'completed'
+      WHERE so.status = 'Paid'
         ${f.from ? `AND so.sale_datetime >= '${d(f.from)}'` : ''}
         ${f.to   ? `AND so.sale_datetime <= '${d(f.to)} 23:59:59'` : ''}`),
 
@@ -48,7 +48,7 @@ export async function getPromotionKPIs(f: PromotionFilters = {}): Promise<Promot
       FROM sales_order_items soi
       JOIN promotions pr ON pr.promotion_id = soi.promo_id
       JOIN sales_orders so ON so.sale_id = soi.sale_id
-      WHERE so.status = 'completed'
+      WHERE so.status = 'Paid'
       GROUP BY pr.promotion_id, pr.promo_name
       ORDER BY usage_count DESC LIMIT 1`),
   ])
@@ -94,7 +94,7 @@ export async function getPromoUsageStats(f: PromotionFilters = {}): Promise<Prom
     FROM promotions pr
     LEFT JOIN sales_order_items soi ON soi.promo_id = pr.promotion_id
     LEFT JOIN sales_orders so ON so.sale_id = soi.sale_id
-      AND so.status = 'completed'
+      AND so.status = 'Paid'
       ${f.from ? `AND so.sale_datetime >= '${d(f.from)}'` : ''}
       ${f.to   ? `AND so.sale_datetime <= '${d(f.to)} 23:59:59'` : ''}
     WHERE 1=1
@@ -129,7 +129,7 @@ export async function getPromoRevenueTrend(f: PromotionFilters = {}): Promise<Pr
       COUNT(DISTINCT so.sale_id)                AS transaction_count
     FROM sales_order_items soi
     JOIN sales_orders so ON so.sale_id = soi.sale_id
-    WHERE soi.promo_id IS NOT NULL AND so.status = 'completed'
+    WHERE soi.promo_id IS NOT NULL AND so.status = 'Paid'
       ${f.from ? `AND so.sale_datetime >= '${d(f.from)}'` : ''}
       ${f.to   ? `AND so.sale_datetime <= '${d(f.to)} 23:59:59'` : ''}
     GROUP BY month ORDER BY month ASC`)
@@ -196,7 +196,7 @@ export async function getPromoProductTable(f: PromotionFilters = {}): Promise<{
         SUM(soi.line_total) AS revenue
       FROM sales_order_items soi
       JOIN sales_orders so ON so.sale_id = soi.sale_id
-      WHERE so.status = 'completed'
+      WHERE so.status = 'Paid'
         ${f.from ? `AND so.sale_datetime >= '${d(f.from)}'` : ''}
         ${f.to   ? `AND so.sale_datetime <= '${d(f.to)} 23:59:59'` : ''}
       GROUP BY soi.product_id, soi.promo_id

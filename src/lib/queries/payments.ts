@@ -31,7 +31,7 @@ export async function getPaymentKPIs(f: PaymentFilters = {}): Promise<PaymentKPI
         SUM(p.paid_amount)     AS total,
         COUNT(*)               AS tx_count,
         SUM(p.status='failed') AS failed,
-        SUM(p.status='success') AS success,
+        SUM(p.status='Settled') AS success,
         AVG(p.paid_amount)     AS avg_amount
       FROM payments p
       JOIN sales_orders so ON so.sale_id = p.sale_id
@@ -42,7 +42,7 @@ export async function getPaymentKPIs(f: PaymentFilters = {}): Promise<PaymentKPI
       FROM payments p
       JOIN payment_methods pm ON pm.method_id = p.method_id
       JOIN sales_orders so ON so.sale_id = p.sale_id
-      WHERE p.status = 'success' ${wc}
+      WHERE p.status = 'Settled' ${wc}
       GROUP BY pm.method_id, pm.method_name
       ORDER BY count DESC LIMIT 1`),
 
@@ -52,7 +52,7 @@ export async function getPaymentKPIs(f: PaymentFilters = {}): Promise<PaymentKPI
       FROM payments p
       JOIN payment_methods pm ON pm.method_id = p.method_id
       JOIN sales_orders so ON so.sale_id = p.sale_id
-      WHERE p.status = 'success' ${wc}
+      WHERE p.status = 'Settled' ${wc}
       GROUP BY pm.method_id, pm.method_name`),
   ])
 
@@ -86,7 +86,7 @@ export async function getPaymentKPIsFull(f: PaymentFilters = {}): Promise<Paymen
       FROM payments p
       JOIN payment_methods pm ON pm.method_id = p.method_id
       JOIN sales_orders so ON so.sale_id = p.sale_id
-      WHERE p.status = 'success' ${wc}
+      WHERE p.status = 'Settled' ${wc}
       GROUP BY pm.method_id, pm.method_name`),
   ])
 
@@ -111,7 +111,7 @@ export async function getPaymentMethodStats(f: PaymentFilters = {}): Promise<Pay
     FROM payments p
     JOIN payment_methods pm ON pm.method_id = p.method_id
     JOIN sales_orders so ON so.sale_id = p.sale_id
-    WHERE p.status = 'success' ${wc}
+    WHERE p.status = 'Settled' ${wc}
     GROUP BY pm.method_id, pm.method_name
     ORDER BY total_amount DESC`)
 
@@ -141,7 +141,7 @@ export async function getPaymentTrend(f: PaymentFilters = {}): Promise<PaymentTr
     FROM payments p
     JOIN payment_methods pm ON pm.method_id = p.method_id
     JOIN sales_orders so ON so.sale_id = p.sale_id
-    WHERE p.status = 'success' ${wc}
+    WHERE p.status = 'Settled' ${wc}
     GROUP BY DATE(p.payment_time)
     ORDER BY date ASC`)
 

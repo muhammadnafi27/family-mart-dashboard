@@ -38,12 +38,12 @@ export async function getOverviewKPIs(filters: OverviewFilters = {}) {
           SUM(tax_total) AS tax_total,
           COUNT(*) AS tx_count
         FROM sales_orders
-        WHERE status = 'completed' ${dateClauseBase}`),
+        WHERE status = 'Paid' ${dateClauseBase}`),
 
       prisma.$queryRawUnsafe<{ total_refund: number; refund_count: number }[]>(
         `SELECT SUM(refund_amount) AS total_refund, COUNT(*) AS refund_count
          FROM returns
-         WHERE status = 'approved'
+         WHERE status IN ('Approved','Refunded')
            ${from ? `AND return_date >= '${dateSql(from)}'` : ''}
            ${to ? `AND return_date <= '${dateSql(to, true)}'` : ''}`
       ),
@@ -61,7 +61,7 @@ export async function getOverviewKPIs(filters: OverviewFilters = {}) {
         `SELECT SUM(soi.quantity) AS total_items
          FROM sales_order_items soi
          JOIN sales_orders so ON so.sale_id = soi.sale_id
-         WHERE so.status = 'completed' ${dateClause}`
+         WHERE so.status = 'Paid' ${dateClause}`
       ),
 
       prisma.$queryRawUnsafe<{ gross_profit: number }[]>(
@@ -69,7 +69,7 @@ export async function getOverviewKPIs(filters: OverviewFilters = {}) {
          FROM sales_order_items soi
          JOIN sales_orders so ON so.sale_id = soi.sale_id
          JOIN products p ON p.product_id = soi.product_id
-         WHERE so.status = 'completed' ${dateClause}`
+         WHERE so.status = 'Paid' ${dateClause}`
       ),
 
       prisma.$queryRawUnsafe<[{ count: bigint }]>(
@@ -124,7 +124,7 @@ export async function getRevenueTrend(filters: OverviewFilters = {}) {
       COUNT(*) AS transactions,
       AVG(grand_total) AS avg_order
     FROM sales_orders
-    WHERE status = 'completed'
+    WHERE status = 'Paid'
       ${from ? `AND sale_datetime >= '${dateSql(from)}'` : ''}
       ${to ? `AND sale_datetime <= '${dateSql(to, true)}'` : ''}
       ${storeId ? `AND store_id = ${storeId}` : ''}
@@ -156,7 +156,7 @@ export async function getStorePerformance(filters: OverviewFilters = {}) {
     LEFT JOIN (
       SELECT sale_id, SUM(quantity) AS item_count FROM sales_order_items GROUP BY sale_id
     ) soi_agg ON soi_agg.sale_id = so.sale_id
-    WHERE so.status = 'completed'
+    WHERE so.status = 'Paid'
       ${from ? `AND so.sale_datetime >= '${dateSql(from)}'` : ''}
       ${to ? `AND so.sale_datetime <= '${dateSql(to, true)}'` : ''}
     GROUP BY s.store_id, s.store_name
@@ -188,7 +188,7 @@ export async function getTopProducts(filters: OverviewFilters = {}) {
     JOIN sales_orders so ON so.sale_id = soi.sale_id
     JOIN products p ON p.product_id = soi.product_id
     JOIN product_categories pc ON pc.category_id = p.category_id
-    WHERE so.status = 'completed'
+    WHERE so.status = 'Paid'
       ${from ? `AND so.sale_datetime >= '${dateSql(from)}'` : ''}
       ${to ? `AND so.sale_datetime <= '${dateSql(to, true)}'` : ''}
       ${storeId ? `AND so.store_id = ${storeId}` : ''}
@@ -219,7 +219,7 @@ export async function getPaymentMethodDistribution(filters: OverviewFilters = {}
     FROM payments p
     JOIN payment_methods pm ON pm.method_id = p.method_id
     JOIN sales_orders so ON so.sale_id = p.sale_id
-    WHERE p.status = 'success' AND so.status = 'completed'
+    WHERE p.status = 'Settled' AND so.status = 'Paid'
       ${from ? `AND so.sale_datetime >= '${dateSql(from)}'` : ''}
       ${to ? `AND so.sale_datetime <= '${dateSql(to, true)}'` : ''}
     GROUP BY pm.method_id, pm.method_name

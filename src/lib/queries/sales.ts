@@ -36,9 +36,9 @@ export async function getSalesKPIs(f: SalesFilters = {}): Promise<SalesKPIs> {
         SUM(so.grand_total)      AS total_revenue,
         COUNT(*)                 AS tx_count,
         SUM(so.discount_total)   AS discount,
-        SUM(so.status='completed') AS completed,
-        SUM(so.status='cancelled') AS cancelled,
-        SUM(so.status='pending')   AS pending
+        SUM(so.status='Paid') AS completed,
+        SUM(so.status='Cancelled') AS cancelled,
+        SUM(so.status='Pending')   AS pending
       FROM sales_orders so ${cityJoin}
       WHERE 1=1 ${wc}`),
 
@@ -54,7 +54,7 @@ export async function getSalesKPIs(f: SalesFilters = {}): Promise<SalesKPIs> {
       FROM sales_orders so
       JOIN stores s ON s.store_id = so.store_id
       ${cityJoin}
-      WHERE 1=1 ${wc} AND so.status = 'completed'
+      WHERE 1=1 ${wc} AND so.status = 'Paid'
       GROUP BY s.store_id, s.store_name
       ORDER BY rev DESC LIMIT 1`),
 
@@ -63,7 +63,7 @@ export async function getSalesKPIs(f: SalesFilters = {}): Promise<SalesKPIs> {
       FROM sales_orders so
       JOIN employees e ON e.employee_id = so.cashier_id
       ${cityJoin}
-      WHERE 1=1 ${wc} AND so.status = 'completed'
+      WHERE 1=1 ${wc} AND so.status = 'Paid'
       GROUP BY e.employee_id, e.full_name
       ORDER BY rev DESC LIMIT 1`),
   ])
@@ -133,7 +133,7 @@ export async function getHourlyHeatmap(f: SalesFilters = {}): Promise<HourlyHeat
       COUNT(*)                              AS transaction_count,
       SUM(so.grand_total)                   AS revenue
     FROM sales_orders so ${cityJoin}
-    WHERE so.status = 'completed' ${wc}
+    WHERE so.status = 'Paid' ${wc}
     GROUP BY hour, day_of_week
     ORDER BY day_of_week, hour`)
 
@@ -166,7 +166,7 @@ export async function getStoreSales(f: SalesFilters = {}): Promise<StoreSalePoin
       SELECT sale_id, SUM(quantity) AS item_count
       FROM sales_order_items GROUP BY sale_id
     ) ia ON ia.sale_id = so.sale_id
-    WHERE so.status = 'completed' ${wc}
+    WHERE so.status = 'Paid' ${wc}
     GROUP BY s.store_id, s.store_name
     ORDER BY revenue DESC`)
 
@@ -199,7 +199,7 @@ export async function getCashierStats(f: SalesFilters = {}, limit = 10): Promise
     JOIN employees e ON e.employee_id = so.cashier_id
     JOIN stores s ON s.store_id = so.store_id
     ${cityJoin}
-    WHERE so.status = 'completed' ${wc}
+    WHERE so.status = 'Paid' ${wc}
     GROUP BY e.employee_id, e.full_name, s.store_name
     ORDER BY revenue DESC
     LIMIT ${limit}`)
@@ -228,7 +228,7 @@ export async function getCategorySales(f: SalesFilters = {}): Promise<CategorySa
     JOIN products p ON p.product_id = soi.product_id
     JOIN product_categories pc ON pc.category_id = p.category_id
     ${cityJoin}
-    WHERE so.status = 'completed' ${wc}
+    WHERE so.status = 'Paid' ${wc}
     GROUP BY pc.category_id, pc.category_name
     ORDER BY revenue DESC`)
 
@@ -267,7 +267,7 @@ export async function getSalesOrdersTable(
     LEFT JOIN (
       SELECT sale_id, pm.method_name
       FROM payments p JOIN payment_methods pm ON pm.method_id = p.method_id
-      WHERE p.status = 'success'
+      WHERE p.status = 'Settled'
       ORDER BY payment_id LIMIT 1
     ) pay ON pay.sale_id = so.sale_id
     LEFT JOIN (SELECT sale_id, SUM(quantity) AS item_count FROM sales_order_items GROUP BY sale_id) ic

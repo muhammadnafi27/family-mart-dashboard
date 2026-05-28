@@ -48,7 +48,7 @@ export async function getProductKPIs(f: ProductFilters = {}): Promise<ProductKPI
       FROM sales_order_items soi
       JOIN sales_orders so ON so.sale_id = soi.sale_id
       JOIN products p ON p.product_id = soi.product_id
-      WHERE so.status = 'completed'
+      WHERE so.status = 'Paid'
         ${swc ? `AND ${swc}` : ''} ${pwc}`),
 
     prisma.$queryRawUnsafe<{
@@ -58,7 +58,7 @@ export async function getProductKPIs(f: ProductFilters = {}): Promise<ProductKPI
       FROM sales_order_items soi
       JOIN sales_orders so ON so.sale_id = soi.sale_id
       JOIN products p ON p.product_id = soi.product_id
-      WHERE so.status = 'completed'
+      WHERE so.status = 'Paid'
         ${swc ? `AND ${swc}` : ''} ${pwc}
       GROUP BY p.product_id, p.product_name
       ORDER BY qty_sold DESC LIMIT 1`),
@@ -105,7 +105,7 @@ export async function getTopProducts(f: ProductFilters = {}, limit = 10): Promis
     JOIN sales_orders so ON so.sale_id = soi.sale_id
     JOIN products p ON p.product_id = soi.product_id
     JOIN product_categories pc ON pc.category_id = p.category_id
-    WHERE so.status = 'completed'
+    WHERE so.status = 'Paid'
       ${swc ? `AND ${swc}` : ''} ${pwc}
     GROUP BY p.product_id, p.product_name, p.sku, pc.category_name
     ORDER BY qty_sold DESC
@@ -140,7 +140,7 @@ export async function getCategorySales(f: ProductFilters = {}): Promise<Category
     JOIN sales_orders so ON so.sale_id = soi.sale_id
     JOIN products p ON p.product_id = soi.product_id
     JOIN product_categories pc ON pc.category_id = p.category_id
-    WHERE so.status = 'completed' ${swc ? `AND ${swc}` : ''}
+    WHERE so.status = 'Paid' ${swc ? `AND ${swc}` : ''}
     GROUP BY pc.category_id, pc.category_name
     ORDER BY revenue DESC`)
 
@@ -173,7 +173,7 @@ export async function getBrandPerformance(f: ProductFilters = {}): Promise<Brand
     JOIN sales_orders so ON so.sale_id = soi.sale_id
     JOIN products p ON p.product_id = soi.product_id
     JOIN brands b ON b.brand_id = p.brand_id
-    WHERE so.status = 'completed' ${swc ? `AND ${swc}` : ''} ${catFilter}
+    WHERE so.status = 'Paid' ${swc ? `AND ${swc}` : ''} ${catFilter}
     GROUP BY b.brand_id, b.brand_name
     ORDER BY revenue DESC
     LIMIT 20`)
@@ -220,7 +220,7 @@ export async function getProductTable(f: ProductFilters = {}): Promise<Paginated
       FROM sales_order_items soi
       JOIN sales_orders so ON so.sale_id = soi.sale_id
       JOIN products p2 ON p2.product_id = soi.product_id
-      WHERE so.status = 'completed' ${swc ? `AND ${swc}` : ''}
+      WHERE so.status = 'Paid' ${swc ? `AND ${swc}` : ''}
       GROUP BY soi.product_id
     ) sales ON sales.product_id = p.product_id
     LEFT JOIN (
